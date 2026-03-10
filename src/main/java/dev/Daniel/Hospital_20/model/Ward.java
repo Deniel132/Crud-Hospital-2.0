@@ -2,25 +2,25 @@ package dev.Daniel.Hospital_20.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import dev.Daniel.Hospital_20.model.enums.Specialty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.boot.jackson.JacksonComponent;
 
 import java.util.List;
 
 @Entity
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Ward {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String specialty;
+	private Specialty specialty;
 
 	@ManyToOne
 	@JoinColumn(name = "hospital_id")
@@ -32,7 +32,7 @@ public class Ward {
 	private List<Room> room;
 
 
-	public Ward(String specialty,Hospital hospital){
+	public Ward(Specialty specialty,Hospital hospital){
 		this.specialty = specialty;
 		this.hospital = hospital;
 	}

@@ -4,10 +4,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Data;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Patient {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,4 +20,8 @@ public class Patient {
 	private String name;
 	private String cpf;
 	private String phone;
+
+
+	private Boolean is_hospitalized = Boolean.FALSE;
+
 }

@@ -3,9 +3,9 @@ version: '3.8'
 services:
   postgres:
     image: postgres:latest
-    container_name: BD_Hospital
+    container_name: hospitais_DB
     environment:
-      POSTGRES_DB: hospitais
+      POSTGRES_DB: hospitais_DB
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "1234"
     ports:

@@ -1,24 +1,27 @@
 package dev.Daniel.Hospital_20.controller;
 
+import dev.Daniel.Hospital_20.DTO.HospitalDTO;
+import dev.Daniel.Hospital_20.DTO.Ward_DTO;
 import dev.Daniel.Hospital_20.model.Hospital;
 import dev.Daniel.Hospital_20.model.Ward;
-import dev.Daniel.Hospital_20.service.WardSrevice;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import dev.Daniel.Hospital_20.service.WardService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/ward")
 public class WardController {
-	private final WardSrevice wardSrevice;
+	private final WardService wardService;
 
-	public WardController(WardSrevice wardSrevice) {
-		this.wardSrevice = wardSrevice;
+	public WardController(WardService wardService) {
+		this.wardService = wardService;
 	}
 
 	@GetMapping
-	public List<Ward> getAll(){return this.wardSrevice.getAll();}
+	public List<Ward> getAll(){return this.wardService.getAll();}
+
+	@PostMapping
+	public Ward save(@RequestBody Ward_DTO wardDto){return this.wardService.saveByDTO(wardDto);}
 
 }

@@ -7,18 +7,17 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class HospitalService {
 
 	private final HospitalRepository hospitalRepository;
-	private final WardSrevice wardSrevice;
+	private final WardService wardService;
 
 
-	public HospitalService(HospitalRepository hospitalRepository, WardSrevice wardSrevice) {
+	public HospitalService(HospitalRepository hospitalRepository, WardService wardService) {
 		this.hospitalRepository = hospitalRepository;
-		this.wardSrevice = wardSrevice;
+		this.wardService = wardService;
 	}
 
 
@@ -33,7 +32,7 @@ public class HospitalService {
 		this.hospitalRepository.save(hospital);
 
 		if (hospitalDTO.getWardDtoList() != null) {
-			hospital.setWards(wardSrevice.saveByHospital(hospitalDTO, hospital));
+			hospital.setWards(wardService.saveByHospital(hospitalDTO, hospital));
 		}
 
 		return this.hospitalRepository.save(hospital);
@@ -58,7 +57,7 @@ public class HospitalService {
 	public void deleteById(Long id){
 		Hospital hospital = getById(id);
 
-		if (wardSrevice.getAll().stream().anyMatch(w -> w.getHospital().getId().equals(hospital.getId()))){
+		if (wardService.getAll().stream().anyMatch(w -> w.getHospital().getId().equals(hospital.getId()))){
 			throw new RuntimeException("Hospital nao pode ser deletado");
 		}else{
 			this.hospitalRepository.deleteById(id);

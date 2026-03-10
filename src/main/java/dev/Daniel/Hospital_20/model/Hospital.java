@@ -3,13 +3,16 @@ package dev.Daniel.Hospital_20.model;
 import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.springframework.boot.jackson.JacksonComponent;
 
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Hospital {
 
 	@Id

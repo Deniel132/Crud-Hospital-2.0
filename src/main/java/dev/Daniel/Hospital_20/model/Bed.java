@@ -1,11 +1,17 @@
 package dev.Daniel.Hospital_20.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import dev.Daniel.Hospital_20.model.enums.Status;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+
+
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Bed {
 
 	@Id
@@ -13,7 +19,7 @@ public class Bed {
 	private Long id;
 
 	private Long bed_number;
-	private String status;
+	private Status status = Status.UNOCCUPIED;
 
 
 	@ManyToOne

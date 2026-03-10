@@ -7,9 +7,9 @@ import java.util.List;
 @Data
 public class Room_DTO {
 
-	private List<Bed_DTO> bed_dtoList;
 
-	private String room_code;
+	private Long Ward_id = 0L;
+	private Integer bed_quantity = 0;
 
 
 
