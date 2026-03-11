@@ -32,7 +32,8 @@ public class HospitalService {
 		this.hospitalRepository.save(hospital);
 
 		if (hospitalDTO.getWardDtoList() != null) {
-			hospital.setWards(wardService.saveByHospital(hospitalDTO, hospital));
+			hospitalDTO.getWardDtoList().forEach(w -> w.setId_hospital(hospital.getId()));
+			hospital.setWards(wardService.criarWard(hospitalDTO.getWardDtoList()));
 		}
 
 		return this.hospitalRepository.save(hospital);

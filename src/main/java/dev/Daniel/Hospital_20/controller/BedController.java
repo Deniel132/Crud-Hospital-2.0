@@ -24,7 +24,7 @@ public class BedController {
 		public List<Bed> getAll(){return this.bedService.getAll();}
 
 		@PostMapping
-		public Bed save(@RequestBody Bed_DTO bedDto){return this.bedService.saveByDTO(bedDto);}
+		public List<Bed> save(@RequestBody List<Bed_DTO> bedDtoList){return this.bedService.criarBed(bedDtoList);}
 
 
 		@PatchMapping("/status/{id}")

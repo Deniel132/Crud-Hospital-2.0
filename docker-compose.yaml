@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     container_name: hospitais_DB
     environment:
-      POSTGRES_DB: hospitais_DB
+      POSTGRES_DB: DB_hospitais
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "1234"
     ports:

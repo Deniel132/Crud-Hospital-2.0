@@ -22,6 +22,6 @@ public class WardController {
 	public List<Ward> getAll(){return this.wardService.getAll();}
 
 	@PostMapping
-	public Ward save(@RequestBody Ward_DTO wardDto){return this.wardService.saveByDTO(wardDto);}
+	public List<Ward> save(@RequestBody List<Ward_DTO> wardDtoList){return this.wardService.criarWard(wardDtoList);}
 
 }

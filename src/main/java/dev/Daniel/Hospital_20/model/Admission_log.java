@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -26,6 +27,8 @@ public class Admission_log {
 	private Patient patient;
 
 	private LocalDate date;
+	private LocalTime hora;
+
 	private Event event_type;
 
 

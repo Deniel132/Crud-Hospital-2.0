@@ -17,12 +17,14 @@ public class Admission_logService {
 	private final Admission_logRepository admissionLogRepository;
 	private final PatientService patientService;
 	private final BedService bedService;
+	private final RoomService roomService;
 
 
-	public Admission_logService(Admission_logRepository admissionLogRepository, PatientService patientService, BedService bedService) {
+	public Admission_logService(Admission_logRepository admissionLogRepository, PatientService patientService, BedService bedService, RoomService roomService) {
 		this.admissionLogRepository = admissionLogRepository;
 		this.patientService = patientService;
 		this.bedService = bedService;
+		this.roomService = roomService;
 	}
 
 
@@ -46,12 +48,14 @@ public class Admission_logService {
 				Admission_log admissionLog = new Admission_log();
 
 				admissionLog.setDate(admissionLogDto.getDate());
+				admissionLog.setHora(admissionLogDto.getHora());
 				admissionLog.setEvent_type(Event.ADMISSION);
 				admissionLog.setPatient(patient);
 				admissionLog.setBed(bed);
 
 				this.bedService.ocuparLeito(admissionLogDto.getLeito_id());
-				this.patientService.setStatus(admissionLogDto.getPatient_id());
+				this.roomService.verificaLeitos();
+				this.patientService.setInternado(admissionLogDto.getPatient_id());
 
 				return this.admissionLogRepository.save(admissionLog);
 			}
@@ -60,21 +64,27 @@ public class Admission_logService {
 
 
 	public Admission_log desinternar(Long id,Admission_log_DTO admissionLogDto){
-		Admission_log admissionLogAntigo = getById(id);
 
-		this.patientService.setStatus(admissionLogAntigo.getPatient().getId());
-		this.bedService.desOcuparLeito(admissionLogAntigo.getBed().getId());
+		Admission_log admissionLogAntigo = getByIdPatient(id);
 
-		Admission_log admission_logNovo = new Admission_log();
+		if (admissionLogAntigo.getEvent_type().equals(Event.DISCHARGE)){
+			throw new RuntimeException("Cliente Ja Teve Alta");
+		}else {
 
-		admission_logNovo.setDate(admissionLogDto.getDate());
-		admission_logNovo.setEvent_type(Event.DISCHARGE);
-		admission_logNovo.setPatient(admissionLogAntigo.getPatient());
-		admission_logNovo.setBed(admissionLogAntigo.getBed());
+			this.patientService.setAlta(admissionLogAntigo.getPatient().getId());
+			this.bedService.desOcuparLeito(admissionLogAntigo.getBed().getId());
+
+			Admission_log admission_logNovo = new Admission_log();
+
+			admission_logNovo.setDate(admissionLogDto.getDate());
+			admission_logNovo.setEvent_type(Event.DISCHARGE);
+			admission_logNovo.setPatient(admissionLogAntigo.getPatient());
+			admission_logNovo.setBed(admissionLogAntigo.getBed());
+			admission_logNovo.setHora(admissionLogDto.getHora());
 
 
-	return this.admissionLogRepository.save(admission_logNovo);
-
+			return this.admissionLogRepository.save(admission_logNovo);
+		}
 	}
 
 	public List<Admission_log> getAll(){return this.admissionLogRepository.findAll();}
@@ -87,6 +97,10 @@ public class Admission_logService {
 		}else{
 			return admissionLog;
 		}
+	}
+
+	public Admission_log getByIdPatient(Long id){
+		return getAll().stream().filter(a -> a.getPatient().getId().equals(id)).toList().getLast();
 	}
 
 

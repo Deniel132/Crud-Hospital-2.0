@@ -1,8 +1,10 @@
 package dev.Daniel.Hospital_20.service;
 
 import dev.Daniel.Hospital_20.DTO.HospitalDTO;
+import dev.Daniel.Hospital_20.DTO.Room_DTO;
 import dev.Daniel.Hospital_20.DTO.Ward_DTO;
 import dev.Daniel.Hospital_20.model.Hospital;
+import dev.Daniel.Hospital_20.model.Room;
 import dev.Daniel.Hospital_20.model.Ward;
 import dev.Daniel.Hospital_20.repository.HospitalRepository;
 import dev.Daniel.Hospital_20.repository.WardRepository;
@@ -27,54 +29,41 @@ public class WardService {
 	}
 
 
-	public Ward saveByDTO(Ward_DTO wardDto){
-		Hospital hospital = hospitalRepository.findById(wardDto.getId_hospital()).orElse(null);
 
-		if (hospital == null){
-			throw new EntityNotFoundException("Hospital Nao Encontrado");
-		}else {
-			Ward ward = criarWard(wardDto,hospital);
+	public List<Ward> criarWard(List<Ward_DTO> wardDto){
 
-			List<Ward> listaWards = hospital.getWards();
-			listaWards.add(ward);
+		List<Ward> wardList = new ArrayList<>();
 
-			hospital.setWards(listaWards);
-			this.hospitalRepository.save(hospital);
+		for (Ward_DTO w : wardDto){
+			Hospital hospital = hospitalRepository.findById(w.getId_hospital()).orElse(null);
 
-			return ward;
-		}
+			if (hospital == null){
+				throw new EntityNotFoundException("Hospital Nao Encontrado");
+			}else {
 
+				Ward ward = new Ward(w.getSpecialty(), hospital);
 
-	}
+				this.wardRepository.save(ward);
+				if (w.getRoom_quantity() != null) {
+					if (w.getRoom_quantity() > 0) {
+						List<Room_DTO> room_dtoList = new ArrayList<>();
 
+						for (int i = 0; i < w.getRoom_quantity(); i++) {
+							Room_DTO roomDto = new Room_DTO();
+							roomDto.setBed_quantity(w.getBed_quantity());
+							roomDto.setWard_id(ward.getId());
 
+							room_dtoList.add(roomDto);
+						}
 
-	public List<Ward> saveByHospital(HospitalDTO hospitalDTO, Hospital hospital){
-		List<Ward> lista = new ArrayList<>();
-
-		for (Ward_DTO w:hospitalDTO.getWardDtoList()){
-
-			Ward ward = criarWard(w,hospital);
-
-			lista.add(ward);
-		}
-		return this.wardRepository.saveAll(lista);
-
-	}
-
-
-
-	private Ward criarWard(Ward_DTO wardDto, Hospital hospital){
-		Ward ward = new Ward(wardDto.getSpecialty(),hospital);
-
-
-		this.wardRepository.save(ward);
-		if ( wardDto.getRoom_quantity() != null) {
-			if (wardDto.getRoom_quantity() > 0) {
-				ward.setRoom(roomService.saveBydWard(wardDto.getRoom_quantity(), wardDto.getBed_quantity(),ward));
+						ward.setRoom(roomService.criarRoom(room_dtoList));
+					}
+				}
+				wardList.add(ward);
 			}
 		}
-		return this.wardRepository.save(ward);
+
+		return this.wardRepository.saveAll(wardList);
 	}
 
 public List<Ward> getAll(){return this.wardRepository.findAll();}

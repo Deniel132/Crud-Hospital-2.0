@@ -4,6 +4,7 @@ import dev.Daniel.Hospital_20.model.enums.Event;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 public class Admission_log_DTO {
@@ -12,6 +13,7 @@ public class Admission_log_DTO {
 	private Long patient_id;
 
 	private LocalDate date;
+	private LocalTime hora;
 
 
 

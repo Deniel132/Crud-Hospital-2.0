@@ -34,6 +34,10 @@ public class Room {
 	private Ward ward;
 
 
+	public Room(String room_code,Ward ward){
+		this.room_code = room_code;
+		this.ward = ward;
+	}
 
 
 }

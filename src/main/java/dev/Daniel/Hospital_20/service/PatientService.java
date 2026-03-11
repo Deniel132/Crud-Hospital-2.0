@@ -60,12 +60,20 @@ public class PatientService {
 		this.patientRepository.deleteById(id);
 	}
 
-	public Patient setStatus(Long id){
+	public Patient setInternado(Long id){
 		Patient patient = getById(id);
 
-		patient.setIs_hospitalized(!patient.getIs_hospitalized());
+		patient.setIs_hospitalized(true);
 
-		return save(patient);
+		return this.patientRepository.save(patient);
+	}
+
+	public Patient setAlta(Long id){
+		Patient patient = getById(id);
+
+		patient.setIs_hospitalized(false);
+
+		return this.patientRepository.save(patient);
 	}
 
 

@@ -28,7 +28,7 @@ public class RoomController {
 		public List<Room> getAll(){return this.roomService.getAll();}
 
 		@PostMapping
-		public Room save(@RequestBody Room_DTO roomDto){return this.roomService.saveByDto(roomDto);}
+		public List<Room> save(@RequestBody List<Room_DTO> roomDtoList){return this.roomService.criarRoom(roomDtoList);}
 
 
 }

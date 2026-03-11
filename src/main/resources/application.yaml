@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:3030/hospitais_DB?sslmode=disable
+    url: jdbc:postgresql://localhost:3030/DB_hospitais?sslmode=disable
     username: postgres
     password: "1234"
     driver-class-name: org.postgresql.Driver

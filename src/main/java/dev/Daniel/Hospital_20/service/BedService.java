@@ -24,62 +24,60 @@ public class BedService {
 		this.roomRepository = roomRepository;
 	}
 
-	public Bed saveByDTO(Bed_DTO bedDto){
-		Room room = roomRepository.findById(bedDto.getRoom_id()).orElse(null);
 
-		if (room == null){
-			throw new EntityNotFoundException("Room Nao Encontrado");
-		}else {
-			Bed bed = new Bed();
-			bed.setStatus(bedDto.getStatus());
+	public List<Bed> criarBed(List<Bed_DTO> bedDtoList){
+
+		int bed_number = 0;
+		List<Bed> bedList = new ArrayList<>();
 
 
-			if (room.getBed() == null){
-				bed.setBed_number(1L);
-			}else{
-				int i = 0;
-				for (Bed b: room.getBed()){
-					i++;
+		for (Bed_DTO b : bedDtoList) {
+
+			Room room = roomRepository.findById(b.getRoom_id()).orElse(null);
+
+			if (room == null) {
+				throw new EntityNotFoundException("Room Nao Encontrado");
+			} else {
+
+
+				Bed bed = new Bed();
+
+				if (room.getBed() == null) {
+					bed_number ++;
+				} else {
+					bed_number = 1;
+					for (Bed bedN : room.getBed()) {
+						bed_number++;
+					}
 				}
-				bed.setBed_number((i + 1L));
 
+				bed.setBed_number(((long) bed_number));
+
+				this.bedRepository.save(bed);
+				bed.setRoom(room);
+
+				bedList.add(bed);
+
+				List<Bed> listBed;
+
+				if ( room.getBed() == null){
+					listBed = new ArrayList<>();
+				}else {
+					listBed = room.getBed();
+				}
+
+
+				listBed.add(bed);
+				room.setBed(listBed);
+				roomRepository.save(room);
 
 			}
 
-			bedRepository.save(bed);
-
-			bed.setRoom(room);
-
-			List<Bed> listBed = room.getBed();
-			listBed.add(bed);
-
-			room.setBed(listBed);
-
-			roomRepository.save(room);
-
-
-			return bedRepository.save(bed);
-
-		}
-	}
-
-	public List<Bed> saveByRoom(Integer bed_quantity, Room room){
-		List<Bed> lista = new ArrayList<>();
-
-		for (int i = 0; i < bed_quantity; i++) {
-			Bed bed = new Bed();
-
-			bed.setBed_number(i + 1L);
-			bed.setRoom(room);
-
-			lista.add(bed);
-
-
-
 		}
 
-		return this.bedRepository.saveAll(lista);
+		return bedRepository.saveAll(bedList);
 	}
+
 
 
 	public List<Bed> getAll(){return this.bedRepository.findAll();}
@@ -121,6 +119,8 @@ public class BedService {
 		}
 
 	}
+
+
 
 
 }
