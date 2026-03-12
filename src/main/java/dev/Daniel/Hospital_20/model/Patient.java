@@ -21,7 +21,6 @@ public class Patient {
 	private String cpf;
 	private String phone;
 
-
 	private Boolean is_hospitalized = Boolean.FALSE;
 
 }

@@ -14,8 +14,4 @@ public class Admission_log_DTO {
 
 	private LocalDate date;
 	private LocalTime hora;
-
-
-
-
 }

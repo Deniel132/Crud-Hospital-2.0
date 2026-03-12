@@ -30,5 +30,4 @@ public class BedController {
 		@PatchMapping("/status/{id}")
 		public Bed mudar_status(@PathVariable Long id){return this.bedService.setStatus(id);}
 
-
 }

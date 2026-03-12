@@ -10,8 +10,4 @@ public class Room_DTO {
 
 	private Long Ward_id = 0L;
 	private Integer bed_quantity = 0;
-
-
-
-
 }

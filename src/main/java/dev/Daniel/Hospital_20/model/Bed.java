@@ -21,7 +21,6 @@ public class Bed {
 	private Long bed_number;
 	private Status status = Status.UNOCCUPIED;
 
-
 	@ManyToOne
 	@JoinColumn(name = "room_id")
 	@JsonBackReference

@@ -21,13 +21,16 @@ public class HospitalService {
 	}
 
 
-	public Hospital save(HospitalDTO hospitalDTO){
+	public Hospital save(HospitalDTO hospitalDTO) {
 		Hospital hospital = new Hospital();
+
+		if (getAll().stream().anyMatch(h -> h.getCnpj().equals(hospitalDTO.getCnpj()))) {
+			throw new RuntimeException("CNPJ Invalido");
+		}
 
 		hospital.setNome(hospitalDTO.getNome());
 		hospital.setCnpj(hospitalDTO.getCnpj());
 		hospital.setPhone(hospitalDTO.getPhone());
-
 
 		this.hospitalRepository.save(hospital);
 
@@ -35,44 +38,33 @@ public class HospitalService {
 			hospitalDTO.getWardDtoList().forEach(w -> w.setId_hospital(hospital.getId()));
 			hospital.setWards(wardService.criarWard(hospitalDTO.getWardDtoList()));
 		}
-
 		return this.hospitalRepository.save(hospital);
-
 
 	}
 
+	public List<Hospital> getAll() {
+		return this.hospitalRepository.findAll();
+	}
 
-	public List<Hospital> getAll(){return this.hospitalRepository.findAll();}
-
-	public Hospital getById(Long id){
+	public Hospital getById(Long id) {
 		Hospital hospital = this.hospitalRepository.findById(id).orElse(null);
 
-		if (hospital == null){
+		if (hospital == null) {
 			throw new EntityNotFoundException("Hospital Nao Encontrado");
-		}else{
+		} else {
 			return hospital;
 		}
 	}
 
 
-	public void deleteById(Long id){
+	public void deleteById(Long id) {
 		Hospital hospital = getById(id);
 
-		if (wardService.getAll().stream().anyMatch(w -> w.getHospital().getId().equals(hospital.getId()))){
+		if (wardService.getAll().stream().anyMatch(w -> w.getHospital().getId().equals(hospital.getId()))) {
 			throw new RuntimeException("Hospital nao pode ser deletado");
-		}else{
+		} else {
 			this.hospitalRepository.deleteById(id);
 		}
-
-
-
 	}
-
-
-
-
-
-
-
 
 }

@@ -19,7 +19,6 @@ private final Admission_logService admissionLogService;
 		this.admissionLogService = admissionLogService;
 	}
 
-
 	@GetMapping
 	public List<Admission_log> getAll(){return this.admissionLogService.getAll();}
 
@@ -29,8 +28,5 @@ private final Admission_logService admissionLogService;
 
 	@PostMapping("/desinternar/{id}")
 	public Admission_log desinternar(@PathVariable Long id,@RequestBody Admission_log_DTO admissionLogDto){return this.admissionLogService.desinternar(id,admissionLogDto);}
-
-
-
 
 }

@@ -4,10 +4,8 @@ import dev.Daniel.Hospital_20.DTO.*;
 import dev.Daniel.Hospital_20.model.Bed;
 import dev.Daniel.Hospital_20.model.enums.Specialty;
 import dev.Daniel.Hospital_20.service.RelatoriosService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -26,20 +24,29 @@ public class RelatorioController {
 
 
 
-	@GetMapping("/beds/{status}")
-	public List<Beds_specialtyDTO> leitos_disponiveis(@PathVariable int status){return this.relatoriosService.lista_leitos(status);}
+	@GetMapping("/beds/{status}/{hospital_id}")
+	public List<Beds_specialtyDTO> leitos_disponiveis(@PathVariable int status,@PathVariable Long hospital_id){return this.relatoriosService.lista_leitos(status,hospital_id);}
 
-	@GetMapping("/quantity")
-	public Quantity_bedsDTO quantityBeds(){return this.relatoriosService.getQuantity();}
+	@GetMapping("/quantity/{hospital_id}")
+	public Quantity_bedsDTO quantityBeds(@PathVariable Long hospital_id){return this.relatoriosService.getQuantity(hospital_id);}
 
 	@GetMapping("/internado/{id}")
 	public Patient_hospitalized getPatient(@PathVariable Long id){return this.relatoriosService.getPatient(id);}
 
-	@GetMapping("/historico/{pagina}/{id}")
-	public Patient_history getHistory(@PathVariable int pagina,@PathVariable Long id){return this.relatoriosService.historico_paciente(pagina,id);}
-
+	@GetMapping("/historico_paciente/{id}")
+	public Page<Historico_DTO> historico(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size){
+		return this.relatoriosService.historicoPaciente(page, size, id);
+	}
 	@GetMapping("/disponiveis")
 	public List<Rooms_Specialty_DTO> quartos_com_disponiveis(){return this.relatoriosService.quartos_com_disponiveis();}
 
+	@GetMapping("/internados")
+	public List<All_patient_hospitalized_DTO> AllHospitalized(){return this.relatoriosService.getAllHospitalized();}
+
+	@GetMapping("/historico_leito/{id}")
+	public List<Historico_Bed_DTO>getHistory(@PathVariable  Long id){return this.relatoriosService.getHistory(id);}
+
+	@GetMapping("/all_leitos")
+	public List<Bed> AllBed(){return this.relatoriosService.AllBed();}
 
 }

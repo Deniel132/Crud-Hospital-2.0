@@ -2,7 +2,6 @@ package dev.Daniel.Hospital_20.service;
 
 import dev.Daniel.Hospital_20.DTO.Bed_DTO;
 import dev.Daniel.Hospital_20.DTO.Room_DTO;
-import dev.Daniel.Hospital_20.model.Bed;
 import dev.Daniel.Hospital_20.model.Room;
 import dev.Daniel.Hospital_20.model.Ward;
 import dev.Daniel.Hospital_20.model.enums.Status;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -24,21 +22,16 @@ public class RoomService {
 	private final BedService bedService;
 
 
-
 	public RoomService(WardRepository wardRepository, RoomRepository roomRepository, BedService bedService) {
 		this.wardRepository = wardRepository;
 		this.roomRepository = roomRepository;
-
 		this.bedService = bedService;
 	}
 
 
-
-	public List<Room> getAll(){return this.roomRepository.findAll();}
-
-
-
-
+	public List<Room> getAll() {
+		return this.roomRepository.findAll();
+	}
 
 
 	public List<Room> criarRoom(List<Room_DTO> roomDto) {
@@ -65,7 +58,7 @@ public class RoomService {
 
 				room_code = ward.getSpecialty().toString().substring(0, 3) + "-" + room_number;
 
-				Room room = new Room(room_code,ward);
+				Room room = new Room(room_code, ward);
 
 				this.roomRepository.save(room);
 
@@ -83,17 +76,16 @@ public class RoomService {
 						}
 
 
-
 						room.setBed(bedService.criarBed(bedDtoList));
 					}
 				}
-				roomList.add(room);
 
+				roomList.add(room);
 				List<Room> ward_room_list;
 
-				if (ward.getRoom() == null){
+				if (ward.getRoom() == null) {
 					ward_room_list = new ArrayList<>();
-				}else {
+				} else {
 					ward_room_list = ward.getRoom();
 				}
 
@@ -108,12 +100,11 @@ public class RoomService {
 	}
 
 
-	public void verificaLeitos(){
-		for (Room r: getAll()){
-			if (r.getBed().stream().allMatch(b -> b.getStatus().equals(Status.OCCUPIED))){
+	public void verificaLeitos() {
+		for (Room r : getAll()) {
+			if (r.getBed().stream().allMatch(b -> b.getStatus().equals(Status.OCCUPIED))) {
 				r.setStatus("FULL");
-
-			}else{
+			} else {
 				r.setStatus("DISPONIVEL");
 
 			}

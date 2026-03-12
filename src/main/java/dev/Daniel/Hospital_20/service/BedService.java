@@ -25,11 +25,10 @@ public class BedService {
 	}
 
 
-	public List<Bed> criarBed(List<Bed_DTO> bedDtoList){
+	public List<Bed> criarBed(List<Bed_DTO> bedDtoList) {
 
 		int bed_number = 0;
 		List<Bed> bedList = new ArrayList<>();
-
 
 		for (Bed_DTO b : bedDtoList) {
 
@@ -39,11 +38,10 @@ public class BedService {
 				throw new EntityNotFoundException("Room Nao Encontrado");
 			} else {
 
-
 				Bed bed = new Bed();
 
 				if (room.getBed() == null) {
-					bed_number ++;
+					bed_number++;
 				} else {
 					bed_number = 1;
 					for (Bed bedN : room.getBed()) {
@@ -60,67 +58,56 @@ public class BedService {
 
 				List<Bed> listBed;
 
-				if ( room.getBed() == null){
+				if (room.getBed() == null) {
 					listBed = new ArrayList<>();
-				}else {
+				} else {
 					listBed = room.getBed();
 				}
-
 
 				listBed.add(bed);
 				room.setBed(listBed);
 				roomRepository.save(room);
-
 			}
-
 		}
-
 		return bedRepository.saveAll(bedList);
 	}
 
 
+	public List<Bed> getAll() {
+		return this.bedRepository.findAll();
+	}
 
-	public List<Bed> getAll(){return this.bedRepository.findAll();}
-
-	public Bed getById(Long id){
+	public Bed getById(Long id) {
 		Bed bed = this.bedRepository.findById(id).orElse(null);
 
-		if (bed == null){
+		if (bed == null) {
 			throw new EntityNotFoundException("Leito Nao Encontrado");
-		}else{
+		} else {
 			return bed;
 		}
 	}
 
-	public Bed ocuparLeito(Long id){
+	public void ocuparLeito(Long id) {
 		Bed bed = getById(id);
-
 		bed.setStatus(Status.OCCUPIED);
-
-		return this.bedRepository.save(bed);
+		this.bedRepository.save(bed);
 	}
 
-	public Bed desOcuparLeito(Long id){
+	public void desOcuparLeito(Long id) {
 		Bed bed = getById(id);
-
 		bed.setStatus(Status.IN_PREPARATION);
-
-		return this.bedRepository.save(bed);
+		this.bedRepository.save(bed);
 	}
 
-	public Bed setStatus(Long id){
+	public Bed setStatus(Long id) {
 		Bed bed = getById(id);
-
 		if (bed.getStatus().equals(Status.IN_PREPARATION) || bed.getStatus().equals(Status.INVALIDA)) {
 			bed.setStatus((Status.UNOCCUPIED));
 			return this.bedRepository.save(bed);
-		}else {
+		} else {
 			throw new RuntimeException("Nao E Possivel Alterar o status");
 		}
-
 	}
-
-
 
 
 }

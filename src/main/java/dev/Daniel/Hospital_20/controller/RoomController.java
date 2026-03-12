@@ -22,13 +22,10 @@ public class RoomController {
 		this.roomService = roomService;
 	}
 
-
-
 		@GetMapping
 		public List<Room> getAll(){return this.roomService.getAll();}
 
 		@PostMapping
 		public List<Room> save(@RequestBody List<Room_DTO> roomDtoList){return this.roomService.criarRoom(roomDtoList);}
-
 
 }

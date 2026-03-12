@@ -1,15 +1,18 @@
 package dev.Daniel.Hospital_20.DTO;
 
 import dev.Daniel.Hospital_20.model.enums.Specialty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Rooms_Specialty_DTO {
 
 	private Specialty specialty;
-	private List<String> room_code;
-
+	private String room_code;
 
 }

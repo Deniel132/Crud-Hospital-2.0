@@ -1,6 +1,6 @@
 package dev.Daniel.Hospital_20.service;
 
-import dev.Daniel.Hospital_20.DTO.HospitalDTO;
+
 import dev.Daniel.Hospital_20.DTO.Room_DTO;
 import dev.Daniel.Hospital_20.DTO.Ward_DTO;
 import dev.Daniel.Hospital_20.model.Hospital;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 public class WardService {
@@ -29,36 +28,52 @@ public class WardService {
 	}
 
 
-
-	public List<Ward> criarWard(List<Ward_DTO> wardDto){
+	public List<Ward> criarWard(List<Ward_DTO> wardDto) {
 
 		List<Ward> wardList = new ArrayList<>();
 
-		for (Ward_DTO w : wardDto){
+		for (Ward_DTO w : wardDto) {
 			Hospital hospital = hospitalRepository.findById(w.getId_hospital()).orElse(null);
 
-			if (hospital == null){
+			if (hospital == null) {
 				throw new EntityNotFoundException("Hospital Nao Encontrado");
-			}else {
 
-				Ward ward = new Ward(w.getSpecialty(), hospital);
+			} else {
 
-				this.wardRepository.save(ward);
-				if (w.getRoom_quantity() != null) {
-					if (w.getRoom_quantity() > 0) {
-						List<Room_DTO> room_dtoList = new ArrayList<>();
+				Ward ward = this.wardRepository.especialidade_igual(w.getSpecialty(), w.getId_hospital());
 
-						for (int i = 0; i < w.getRoom_quantity(); i++) {
-							Room_DTO roomDto = new Room_DTO();
-							roomDto.setBed_quantity(w.getBed_quantity());
-							roomDto.setWard_id(ward.getId());
 
-							room_dtoList.add(roomDto);
+				if (ward == null) {
+					ward = new Ward(w.getSpecialty(), hospital);
+					this.wardRepository.save(ward);
+				}
+
+
+				if (w.getRoom_quantity() > 0) {
+
+					List<Room_DTO> room_dtoList = new ArrayList<>();
+
+					for (int i = 0; i < w.getRoom_quantity(); i++) {
+						Room_DTO roomDto = new Room_DTO();
+						roomDto.setBed_quantity(w.getBed_quantity());
+						roomDto.setWard_id(ward.getId());
+
+						room_dtoList.add(roomDto);
+					}
+
+					List<Room> newRooms = roomService.criarRoom(room_dtoList);
+					if (ward.getRoom() == null) {
+						ward.setRoom(new ArrayList<>());
+					}
+
+					for (Room r : newRooms) {
+						if (!ward.getRoom().contains(r)) {
+							ward.getRoom().add(r);
 						}
 
-						ward.setRoom(roomService.criarRoom(room_dtoList));
 					}
 				}
+
 				wardList.add(ward);
 			}
 		}
@@ -66,10 +81,9 @@ public class WardService {
 		return this.wardRepository.saveAll(wardList);
 	}
 
-public List<Ward> getAll(){return this.wardRepository.findAll();}
-
-
-
+	public List<Ward> getAll() {
+		return this.wardRepository.findAll();
+	}
 
 
 }

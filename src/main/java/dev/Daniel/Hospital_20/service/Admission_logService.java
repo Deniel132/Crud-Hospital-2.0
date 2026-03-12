@@ -28,23 +28,23 @@ public class Admission_logService {
 	}
 
 
-	public Admission_log internar(Admission_log_DTO admissionLogDto){
+	public Admission_log internar(Admission_log_DTO admissionLogDto) {
 
-		if (admissionLogDto.getLeito_id() == null || admissionLogDto.getPatient_id() == null || admissionLogDto.getDate() == null ){
+		if (admissionLogDto.getLeito_id() == null || admissionLogDto.getPatient_id() == null || admissionLogDto.getDate() == null) {
 			throw new RuntimeException("Internamento possui Campos Vaszios");
 		}
 
 		Bed bed = this.bedService.getById(admissionLogDto.getLeito_id());
 
-		if (bed.getStatus().equals(Status.OCCUPIED)){
-			throw new RuntimeException("Leito Ja Ocupado");
-		}else {
+		if (bed.getStatus().equals(Status.OCCUPIED) || bed.getStatus().equals(Status.IN_PREPARATION)) {
+			throw new RuntimeException("Leito nao Disponivel");
+		} else {
 
 			Patient patient = this.patientService.getById(admissionLogDto.getPatient_id());
 
-			if (patient.getIs_hospitalized()){
+			if (patient.getIs_hospitalized()) {
 				throw new RuntimeException("Paciente Ja Internado");
-			}else {
+			} else {
 				Admission_log admissionLog = new Admission_log();
 
 				admissionLog.setDate(admissionLogDto.getDate());
@@ -63,13 +63,13 @@ public class Admission_logService {
 	}
 
 
-	public Admission_log desinternar(Long id,Admission_log_DTO admissionLogDto){
+	public Admission_log desinternar(Long id, Admission_log_DTO admissionLogDto) {
 
 		Admission_log admissionLogAntigo = getByIdPatient(id);
 
-		if (admissionLogAntigo.getEvent_type().equals(Event.DISCHARGE)){
+		if (admissionLogAntigo.getEvent_type().equals(Event.DISCHARGE)) {
 			throw new RuntimeException("Cliente Ja Teve Alta");
-		}else {
+		} else {
 
 			this.patientService.setAlta(admissionLogAntigo.getPatient().getId());
 			this.bedService.desOcuparLeito(admissionLogAntigo.getBed().getId());
@@ -82,26 +82,25 @@ public class Admission_logService {
 			admission_logNovo.setBed(admissionLogAntigo.getBed());
 			admission_logNovo.setHora(admissionLogDto.getHora());
 
-
 			return this.admissionLogRepository.save(admission_logNovo);
 		}
 	}
 
-	public List<Admission_log> getAll(){return this.admissionLogRepository.findAll();}
+	public List<Admission_log> getAll() {
+		return this.admissionLogRepository.findAll();
+	}
 
-	public Admission_log getById(Long id){
+	public Admission_log getById(Long id) {
 		Admission_log admissionLog = this.admissionLogRepository.findById(id).orElse(null);
-
-		if (admissionLog == null){
+		if (admissionLog == null) {
 			throw new RuntimeException("Adimissao nao Encontrada");
-		}else{
+		} else {
 			return admissionLog;
 		}
 	}
 
-	public Admission_log getByIdPatient(Long id){
+	public Admission_log getByIdPatient(Long id) {
 		return getAll().stream().filter(a -> a.getPatient().getId().equals(id)).toList().getLast();
 	}
-
 
 }

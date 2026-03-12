@@ -13,8 +13,13 @@ import java.util.List;
 @AllArgsConstructor
 public class Quantity_bedsDTO {
 
-	private Integer beds_UNOCCUPIED;
-	private Integer beds_OCCUPIED;
+	private Long beds_UNOCCUPIED;
+	private Long beds_OCCUPIED;
+
+	public Quantity_bedsDTO(Long beds_UNOCCUPIED, Long beds_OCCUPIED){
+		this.setBeds_UNOCCUPIED(beds_UNOCCUPIED);
+		this.setBeds_OCCUPIED(beds_OCCUPIED);
+	}
 
 	private List<Bed_specialty_qt_DTO> bedSpecialtyQtDto;
 

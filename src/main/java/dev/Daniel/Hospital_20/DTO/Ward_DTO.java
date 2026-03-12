@@ -8,8 +8,6 @@ import java.util.List;
 @Data
 public class Ward_DTO {
 
-
-
 	private Long id_hospital = 0L;
 
 	private Specialty specialty;

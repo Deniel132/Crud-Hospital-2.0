@@ -11,5 +11,4 @@ public class Patient_history {
 
 	private List<Historico_DTO> historico;
 
-
 }

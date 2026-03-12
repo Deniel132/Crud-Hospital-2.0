@@ -20,7 +20,6 @@ public class PatientController {
 	}
 
 
-
 	@GetMapping
 	public List<Patient> getAll(){return this.patientService.getAll();}
 

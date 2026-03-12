@@ -23,7 +23,6 @@ public class Hospital {
 	private String phone;
 	private String cnpj;
 
-
 	@OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<Ward> wards;
