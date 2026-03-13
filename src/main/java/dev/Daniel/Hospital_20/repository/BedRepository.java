@@ -17,7 +17,8 @@ public interface BedRepository extends JpaRepository<Bed, Long> {
 
 	@Query("SELECT new dev.Daniel.Hospital_20.DTO.Quantity_bedsDTO( " +
 			"COUNT (CASE WHEN b.status = dev.Daniel.Hospital_20.model.enums.Status.UNOCCUPIED THEN 1 ELSE NULL END), " +
-			"COUNT (CASE WHEN b.status = dev.Daniel.Hospital_20.model.enums.Status.OCCUPIED  THEN 1 ELSE NULL END)) " +
+			"COUNT (CASE WHEN b.status = dev.Daniel.Hospital_20.model.enums.Status.OCCUPIED  THEN 1 ELSE NULL END)," +
+			"COUNT (CASE WHEN b.status = dev.Daniel.Hospital_20.model.enums.Status.IN_PREPARATION  THEN 1 ELSE NULL END)) " +
 			"FROM Bed b " +
 			"WHERE b.room.ward.hospital.id = :hospital_id ")
 
