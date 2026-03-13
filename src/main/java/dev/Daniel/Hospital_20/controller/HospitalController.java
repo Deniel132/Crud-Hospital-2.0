@@ -3,10 +3,6 @@ package dev.Daniel.Hospital_20.controller;
 import dev.Daniel.Hospital_20.DTO.HospitalDTO;
 import dev.Daniel.Hospital_20.model.Hospital;
 import dev.Daniel.Hospital_20.service.HospitalService;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,14 +19,19 @@ public class HospitalController {
 	}
 
 	@PostMapping
-	public Hospital save(@RequestBody HospitalDTO hospitalDTO){return this.hospitalService.save(hospitalDTO);}
+	public Hospital save(@RequestBody HospitalDTO hospitalDTO) {
+		return this.hospitalService.save(hospitalDTO);
+	}
 
 	@GetMapping
-	public List<Hospital> getAll(){return this.hospitalService.getAll();}
+	public List<Hospital> getAll() {
+		return this.hospitalService.getAll();
+	}
 
 	@DeleteMapping("/deletar/{id}")
-	public void deleteById(@PathVariable Long id){this.hospitalService.deleteById(id);}
-
+	public void deleteById(@PathVariable Long id) {
+		this.hospitalService.deleteById(id);
+	}
 
 
 }

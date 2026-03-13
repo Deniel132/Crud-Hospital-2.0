@@ -1,18 +1,22 @@
 package dev.Daniel.Hospital_20.service;
 
 import dev.Daniel.Hospital_20.DTO.*;
-import dev.Daniel.Hospital_20.model.*;
+import dev.Daniel.Hospital_20.model.Admission_log;
+import dev.Daniel.Hospital_20.model.Bed;
 import dev.Daniel.Hospital_20.model.enums.Event;
+import dev.Daniel.Hospital_20.model.enums.Specialty;
 import dev.Daniel.Hospital_20.model.enums.Status;
 import dev.Daniel.Hospital_20.repository.Admission_logRepository;
 import dev.Daniel.Hospital_20.repository.BedRepository;
 import dev.Daniel.Hospital_20.repository.RoomRepository;
+import dev.Daniel.Hospital_20.repository.WardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,19 +28,33 @@ public class RelatoriosService {
 	private final RoomRepository roomRepository;
 	private final BedRepository bedRepository;
 	private final Admission_logRepository logRepository;
+	private final WardRepository wardRepository;
 
 
-	public RelatoriosService(Admission_logService admissionLogService, BedService bedService, RoomRepository roomRepository, BedRepository bedRepository, Admission_logRepository logRepository) {
+	public RelatoriosService(Admission_logService admissionLogService, BedService bedService, RoomRepository roomRepository, BedRepository bedRepository, Admission_logRepository logRepository, WardRepository wardRepository) {
 		this.admissionLogService = admissionLogService;
 		this.bedService = bedService;
 		this.roomRepository = roomRepository;
 		this.bedRepository = bedRepository;
 		this.logRepository = logRepository;
+		this.wardRepository = wardRepository;
 	}
 
 
 	public List<Beds_specialtyDTO> lista_leitos(int status_int, Long hospital_id) {
-		return this.bedRepository.leitos_speciality(Status.deint(status_int), hospital_id);
+		List<Beds_specialtyDTO> list = new ArrayList<>();
+
+		for (Specialty sp : wardRepository.lista_specialty(hospital_id)) {
+			Beds_specialtyDTO bedsSpecialtyDTO = new Beds_specialtyDTO();
+
+			List<Bed> bedList = this.bedRepository.leitos_speciality(Status.deint(status_int), hospital_id, sp);
+
+			bedsSpecialtyDTO.setSpecialty(sp);
+			bedsSpecialtyDTO.setBedList(bedList);
+			list.add(bedsSpecialtyDTO);
+		}
+
+		return list;
 	}
 
 

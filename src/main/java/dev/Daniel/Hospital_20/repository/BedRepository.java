@@ -1,9 +1,9 @@
 package dev.Daniel.Hospital_20.repository;
 
 import dev.Daniel.Hospital_20.DTO.Bed_specialty_qt_DTO;
-import dev.Daniel.Hospital_20.DTO.Beds_specialtyDTO;
 import dev.Daniel.Hospital_20.DTO.Quantity_bedsDTO;
 import dev.Daniel.Hospital_20.model.Bed;
+import dev.Daniel.Hospital_20.model.enums.Specialty;
 import dev.Daniel.Hospital_20.model.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface BedRepository extends JpaRepository<Bed,Long> {
-
+public interface BedRepository extends JpaRepository<Bed, Long> {
 
 
 	@Query("SELECT new dev.Daniel.Hospital_20.DTO.Quantity_bedsDTO( " +
@@ -32,12 +31,13 @@ public interface BedRepository extends JpaRepository<Bed,Long> {
 			"GROUP BY w.specialty")
 	public List<Bed_specialty_qt_DTO> qunatidadePorAla(Long hospital_id);
 
-	@Query("SELECT new dev.Daniel.Hospital_20.DTO.Beds_specialtyDTO" +
-			"(w.specialty,b)" +
+	@Query("SELECT b " +
 			" FROM Bed b " +
 			"JOIN b.room r " +
-			"JOIN r.ward w WHERE b.status = :status and w.hospital.id = :hospital_id")
-	public List<Beds_specialtyDTO> leitos_speciality(Status status,Long hospital_id);
+			"JOIN r.ward w WHERE b.status = :status " +
+			"and w.hospital.id = :hospital_id " +
+			"and b.room.ward.specialty = :specialty")
+	public List<Bed> leitos_speciality(Status status, Long hospital_id, Specialty specialty);
 
 
 }

@@ -1,12 +1,10 @@
 package dev.Daniel.Hospital_20.DTO;
 
-import dev.Daniel.Hospital_20.model.Bed;
 import dev.Daniel.Hospital_20.model.enums.Specialty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 @Data
 @AllArgsConstructor

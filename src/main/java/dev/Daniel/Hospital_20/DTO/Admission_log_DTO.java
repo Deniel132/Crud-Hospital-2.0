@@ -1,6 +1,6 @@
 package dev.Daniel.Hospital_20.DTO;
 
-import dev.Daniel.Hospital_20.model.enums.Event;
+
 import lombok.Data;
 
 import java.time.LocalDate;
