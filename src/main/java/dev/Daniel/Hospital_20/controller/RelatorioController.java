@@ -56,7 +56,7 @@ public class RelatorioController {
 		return this.relatoriosService.getHistory(id);
 	}
 
-	@GetMapping("/all_leitos")
+	@GetMapping("/todos_os_leitos")
 	public List<Bed> AllBed() {
 		return this.relatoriosService.AllBed();
 	}

@@ -28,6 +28,11 @@ public class HospitalController {
 		return this.hospitalService.getAll();
 	}
 
+	@GetMapping("/{id}")
+	public Hospital getByid(@PathVariable Long id) {
+		return this.hospitalService.getById(id);
+	}
+
 	@DeleteMapping("/deletar/{id}")
 	public void deleteById(@PathVariable Long id) {
 		this.hospitalService.deleteById(id);

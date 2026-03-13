@@ -18,6 +18,10 @@ public class BedController {
 		this.bedService = bedService;
 	}
 
+	@GetMapping("/{id}")
+	public Bed getById(@PathVariable Long id) {
+		return this.bedService.getById(id);
+	}
 
 	@GetMapping
 	public List<Bed> getAll() {
