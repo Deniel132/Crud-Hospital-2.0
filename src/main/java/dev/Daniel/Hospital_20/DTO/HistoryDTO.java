@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Historico_DTO {
+public class HistoryDTO {
 
 	private Specialty specialty;
-	private LocalDate data_internamento;
-	private LocalDate data_alta;
+	private LocalDateTime dateAdmission;
+	private LocalDateTime dateDischarge;
 }

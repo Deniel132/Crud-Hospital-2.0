@@ -10,12 +10,11 @@ import java.util.List;
 public interface WardRepository extends JpaRepository<Ward, Long> {
 
 
-	@Query("SELECT w from Ward w where w.specialty = :specialty and w.hospital.id = :hospital_id")
-	public Ward especialidade_igual(Specialty specialty, Long hospital_id);
+	@Query("SELECT w from Ward w where w.specialty = :specialty and w.hospital.id = :hospitalId")
+	public Ward specialtyEquals(Specialty specialty, Long hospitalId);
 
 
-	@Query("select w.specialty from Ward w WHERE w.hospital.id = :hospital_id ORDER BY w.specialty desc ")
-	public List<Specialty> lista_specialty(Long hospital_id);
-
+	@Query("select w.specialty from Ward w WHERE w.hospital.id = :hospitalId ORDER BY w.specialty desc ")
+	public List<Specialty> specialtyList(Long hospitalId);
 
 }

@@ -3,8 +3,10 @@ package dev.Daniel.Hospital_20.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import dev.Daniel.Hospital_20.model.enums.Status;
 import jakarta.persistence.*;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Entity
@@ -18,14 +20,13 @@ public class Bed {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private Long bed_number;
+	private Long bedNumber;
 	private Status status = Status.UNOCCUPIED;
 
 	@ManyToOne
 	@JoinColumn(name = "room_id")
 	@JsonBackReference
 	private Room room;
-
 
 
 }

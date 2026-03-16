@@ -1,14 +1,13 @@
 package dev.Daniel.Hospital_20.service;
 
-import dev.Daniel.Hospital_20.DTO.Bed_DTO;
-import dev.Daniel.Hospital_20.DTO.Room_DTO;
+import dev.Daniel.Hospital_20.DTO.RoomDTO;
 import dev.Daniel.Hospital_20.model.Room;
 import dev.Daniel.Hospital_20.model.Ward;
 import dev.Daniel.Hospital_20.model.enums.Status;
 import dev.Daniel.Hospital_20.repository.RoomRepository;
 import dev.Daniel.Hospital_20.repository.WardRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,92 +20,55 @@ public class RoomService {
 	private final RoomRepository roomRepository;
 	private final BedService bedService;
 
-
 	public RoomService(WardRepository wardRepository, RoomRepository roomRepository, BedService bedService) {
 		this.wardRepository = wardRepository;
 		this.roomRepository = roomRepository;
 		this.bedService = bedService;
 	}
 
-
 	public List<Room> getAll() {
 		return this.roomRepository.findAll();
 	}
 
+	@Transactional
+	public List<Room> create(Long wardId, RoomDTO roomDTOS) {
+		Ward ward = this.wardRepository.findById(wardId).orElseThrow(() -> new RuntimeException("Ward Nao Encontrada"));
+		return this.generate(ward, roomDTOS.getRoomQuantity(), roomDTOS.getBedQuantity());
+	}
 
-	public List<Room> criarRoom(List<Room_DTO> roomDto) {
+	@Transactional
+	public List<Room> generate(Ward ward, Integer roomQuantity, Integer bedQuantity) {
 
 		List<Room> roomList = new ArrayList<>();
-		int room_number = 0;
 
-		for (Room_DTO r : roomDto) {
+		for (int i = 1; i <= roomQuantity; i++) {
+			String roomCode;
 
-			Ward ward = this.wardRepository.findById(r.getWard_id()).orElse(null);
-			String room_code;
-
-			if (ward == null) {
-				throw new EntityNotFoundException("Ward Nao Encontrado");
+			if (this.roomRepository.getNumberFromRumCode(ward.getId()) != null) {
+				roomCode = ward.getSpecialty().toString().substring(0, 3) + "-" + (this.roomRepository.getNumberFromRumCode(ward.getId()) + 1);
 			} else {
-				if (ward.getRoom() == null) {
-					room_number++;
-				} else {
-					room_number = 1;
-					for (Room vfRoom : ward.getRoom()) {
-						room_number++;
-					}
-				}
-
-				room_code = ward.getSpecialty().toString().substring(0, 3) + "-" + room_number;
-
-				Room room = new Room(room_code, ward);
-
-				this.roomRepository.save(room);
-
-
-				if (r.getBed_quantity() != null) {
-					if (r.getBed_quantity() > 0) {
-						List<Bed_DTO> bedDtoList = new ArrayList<>();
-
-						for (int i = 0; i < r.getBed_quantity(); i++) {
-							Bed_DTO bedDto = new Bed_DTO();
-							bedDto.setRoom_id(room.getId());
-
-							bedDtoList.add(bedDto);
-
-						}
-
-
-						room.setBed(bedService.criarBed(bedDtoList));
-					}
-				}
-
-				roomList.add(room);
-				List<Room> ward_room_list;
-
-				if (ward.getRoom() == null) {
-					ward_room_list = new ArrayList<>();
-				} else {
-					ward_room_list = ward.getRoom();
-				}
-
-				ward_room_list.add(room);
-				ward.setRoom(ward_room_list);
-				this.wardRepository.save(ward);
-
+				roomCode = ward.getSpecialty().toString().substring(0, 3) + "-" + i;
 			}
-		}
 
+			Room room = new Room(roomCode, ward);
+			this.roomRepository.save(room);
+
+			if (bedQuantity != null && bedQuantity > 0) {
+				room.setBeds(this.bedService.generate(room, bedQuantity));
+			}
+
+			roomList.add(room);
+		}
 		return this.roomRepository.saveAll(roomList);
 	}
 
 
-	public void verificaLeitos() {
+	public void verifyBeds() {
 		for (Room r : getAll()) {
-			if (r.getBed().stream().allMatch(b -> b.getStatus().equals(Status.OCCUPIED))) {
-				r.setStatus("FULL");
+			if (r.getBeds().stream().allMatch(b -> b.getStatus().equals(Status.OCCUPIED))) {
+				r.setFilled(true);
 			} else {
-				r.setStatus("DISPONIVEL");
-
+				r.setFilled(false);
 			}
 			this.roomRepository.save(r);
 		}

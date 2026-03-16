@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.Daniel.Hospital_20.model.enums.Specialty;
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.boot.jackson.JacksonComponent;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -27,16 +29,15 @@ public class Ward {
 	@JsonBackReference
 	private Hospital hospital;
 
-	@OneToMany
+	@OneToMany(mappedBy = "ward", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
-	private List<Room> room;
+	private List<Room> rooms;
 
 
-	public Ward(Specialty specialty,Hospital hospital){
+	public Ward(Specialty specialty, Hospital hospital) {
 		this.specialty = specialty;
 		this.hospital = hospital;
 	}
-
 
 
 }

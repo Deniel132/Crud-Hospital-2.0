@@ -7,9 +7,9 @@ import java.util.List;
 @Data
 public class HospitalDTO {
 
-	private String nome;
+	private String name;
 	private String phone;
 	private String cnpj;
 
-	private List<Ward_DTO> wardDtoList;
+	private List<WardDTO> wardDtoList;
 }

@@ -5,6 +5,7 @@ import dev.Daniel.Hospital_20.model.Hospital;
 import dev.Daniel.Hospital_20.repository.HospitalRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,25 +22,23 @@ public class HospitalService {
 	}
 
 
-	public Hospital save(HospitalDTO hospitalDTO) {
-		Hospital hospital = new Hospital();
+	@Transactional
+	public Hospital create(HospitalDTO hospitalDTO) {
 
-		if (getAll().stream().anyMatch(h -> h.getCnpj().equals(hospitalDTO.getCnpj()))) {
-			throw new RuntimeException("CNPJ Invalido");
-		}
-
-		hospital.setNome(hospitalDTO.getNome());
-		hospital.setCnpj(hospitalDTO.getCnpj());
-		hospital.setPhone(hospitalDTO.getPhone());
-
+		this.checkCnpj(hospitalDTO.getCnpj());
+		Hospital hospital = new Hospital(hospitalDTO.getName(), hospitalDTO.getPhone(), hospitalDTO.getCnpj());
 		this.hospitalRepository.save(hospital);
 
-		if (hospitalDTO.getWardDtoList() != null) {
-			hospitalDTO.getWardDtoList().forEach(w -> w.setId_hospital(hospital.getId()));
-			hospital.setWards(wardService.criarWard(hospitalDTO.getWardDtoList()));
+		if (hospitalDTO.getWardDtoList() != null && !hospitalDTO.getWardDtoList().isEmpty()) {
+			hospital.setWards(wardService.generate(hospital, hospitalDTO.getWardDtoList()));
 		}
 		return this.hospitalRepository.save(hospital);
+	}
 
+	private void checkCnpj(String cnpj) {
+		if (this.hospitalRepository.existsByCnpj(cnpj)) {
+			throw new RuntimeException("CNPJ Invalido");
+		}
 	}
 
 	public List<Hospital> getAll() {
@@ -47,19 +46,11 @@ public class HospitalService {
 	}
 
 	public Hospital getById(Long id) {
-		Hospital hospital = this.hospitalRepository.findById(id).orElse(null);
-
-		if (hospital == null) {
-			throw new EntityNotFoundException("Hospital Nao Encontrado");
-		} else {
-			return hospital;
-		}
+		return this.hospitalRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Hospital Nao Encontrado"));
 	}
-
 
 	public void deleteById(Long id) {
 		Hospital hospital = getById(id);
-
 		if (wardService.getAll().stream().anyMatch(w -> w.getHospital().getId().equals(hospital.getId()))) {
 			throw new RuntimeException("Hospital nao pode ser deletado");
 		} else {

@@ -1,6 +1,6 @@
 package dev.Daniel.Hospital_20.controller;
 
-import dev.Daniel.Hospital_20.DTO.Bed_DTO;
+import dev.Daniel.Hospital_20.DTO.BedDTO;
 import dev.Daniel.Hospital_20.model.Bed;
 import dev.Daniel.Hospital_20.service.BedService;
 import org.springframework.web.bind.annotation.*;
@@ -29,14 +29,14 @@ public class BedController {
 	}
 
 	@PostMapping
-	public List<Bed> save(@RequestBody List<Bed_DTO> bedDtoList) {
-		return this.bedService.criarBed(bedDtoList);
+	public List<Bed> create(@RequestBody BedDTO bedDTO) {
+		return this.bedService.create(bedDTO);
 	}
 
 
 	@PatchMapping("/status/{id}")
-	public Bed mudar_status(@PathVariable Long id) {
-		return this.bedService.setStatus(id);
+	public Bed update(@PathVariable Long id) {
+		return this.bedService.updateStatus(id);
 	}
 
 }

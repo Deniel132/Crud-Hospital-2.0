@@ -4,7 +4,10 @@ package dev.Daniel.Hospital_20.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -16,16 +19,16 @@ import java.util.List;
 public class Room {
 
 	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String room_code;
-	private String status = "vasio";
+	private String roomCode;
+	private boolean isFilled;
 
 
-	@OneToMany
+	@OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
-	private List<Bed> bed;
+	private List<Bed> beds;
 
 
 	@ManyToOne
@@ -34,8 +37,8 @@ public class Room {
 	private Ward ward;
 
 
-	public Room(String room_code,Ward ward){
-		this.room_code = room_code;
+	public Room(String roomCode, Ward ward) {
+		this.roomCode = roomCode;
 		this.ward = ward;
 	}
 

@@ -10,14 +10,11 @@ import java.util.List;
 @RequestMapping("/patient")
 public class PatientController {
 
-
 	private final PatientService patientService;
-
 
 	public PatientController(PatientService patientService) {
 		this.patientService = patientService;
 	}
-
 
 	@GetMapping
 	public List<Patient> getAll() {
@@ -29,23 +26,18 @@ public class PatientController {
 		return this.patientService.getById(id);
 	}
 
-
 	@PostMapping
 	public Patient save(@RequestBody Patient patient) {
 		return this.patientService.save(patient);
 	}
 
-
 	@PutMapping("/{id}")
-	public Patient atualizar_tudo(@PathVariable Long id, @RequestBody Patient patient) {
-		return this.patientService.att_all(id, patient);
+	public Patient attAll(@PathVariable Long id, @RequestBody Patient patient) {
+		return this.patientService.attAll(id, patient);
 	}
-
 
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Long id) {
 		this.patientService.deleteById(id);
 	}
-
-
 }

@@ -5,18 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Historico_Bed_DTO {
+public class BedHistoryDTO {
 
-	private String nome_patient;
+	private String PatientName;
 
-	private Long bed_id;
+	private Long bedId;
 
-	private LocalDate data_Internamento;
+	private LocalDateTime dateAdmission;
 
-	private LocalDate data_alta;
+	private LocalDateTime dateDischarge;
 
 }

@@ -1,7 +1,7 @@
 package dev.Daniel.Hospital_20.repository;
 
-import dev.Daniel.Hospital_20.DTO.Bed_specialty_qt_DTO;
-import dev.Daniel.Hospital_20.DTO.Quantity_bedsDTO;
+import dev.Daniel.Hospital_20.DTO.BedSpecialtyQtdDTO;
+import dev.Daniel.Hospital_20.DTO.QuantityBedsDTO;
 import dev.Daniel.Hospital_20.model.Bed;
 import dev.Daniel.Hospital_20.model.enums.Specialty;
 import dev.Daniel.Hospital_20.model.enums.Status;
@@ -15,30 +15,34 @@ import java.util.List;
 public interface BedRepository extends JpaRepository<Bed, Long> {
 
 
-	@Query("SELECT new dev.Daniel.Hospital_20.DTO.Quantity_bedsDTO( " +
+	@Query("SELECT new dev.Daniel.Hospital_20.DTO.QuantityBedsDTO( " +
 			"COUNT (CASE WHEN b.status = dev.Daniel.Hospital_20.model.enums.Status.UNOCCUPIED THEN 1 ELSE NULL END), " +
 			"COUNT (CASE WHEN b.status = dev.Daniel.Hospital_20.model.enums.Status.OCCUPIED  THEN 1 ELSE NULL END)," +
 			"COUNT (CASE WHEN b.status = dev.Daniel.Hospital_20.model.enums.Status.IN_PREPARATION  THEN 1 ELSE NULL END)) " +
 			"FROM Bed b " +
-			"WHERE b.room.ward.hospital.id = :hospital_id ")
+			"WHERE b.room.ward.hospital.id = :hospitalId ")
 
-	public Quantity_bedsDTO quantidade(Long hospital_id);
+	public QuantityBedsDTO quantity(Long hospitalId);
 
-	@Query("SELECT new dev.Daniel.Hospital_20.DTO.Bed_specialty_qt_DTO" +
+	@Query("SELECT new dev.Daniel.Hospital_20.DTO.BedSpecialtyQtdDTO" +
 			"(w.specialty,count(b))" +
 			" FROM Bed b " +
 			"JOIN b.room r " +
-			"JOIN r.ward w WHERE w.hospital.id = :hospital_id " +
+			"JOIN r.ward w WHERE w.hospital.id = :hospitalId " +
 			"GROUP BY w.specialty")
-	public List<Bed_specialty_qt_DTO> qunatidadePorAla(Long hospital_id);
+	public List<BedSpecialtyQtdDTO> quantityPerWard(Long hospitalId);
 
 	@Query("SELECT b " +
 			" FROM Bed b " +
 			"JOIN b.room r " +
 			"JOIN r.ward w WHERE b.status = :status " +
-			"and w.hospital.id = :hospital_id " +
+			"and w.hospital.id = :hospitalId " +
 			"and b.room.ward.specialty = :specialty")
-	public List<Bed> leitos_speciality(Status status, Long hospital_id, Specialty specialty);
+	public List<Bed> bedSpecialty(Status status, Long hospitalId, Specialty specialty);
+
+
+	@Query("select max(b.bedNumber) from Bed b where b.room.id = :roomId group by b.id")
+	public Long getBedNumber(Long roomId);
 
 
 }

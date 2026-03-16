@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Rooms_Specialty_DTO {
+public class BedSpecialtyQtdDTO {
 
 	private Specialty specialty;
-	private String room_code;
-
+	private Long quantity;
 }

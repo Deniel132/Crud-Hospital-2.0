@@ -1,11 +1,10 @@
 package dev.Daniel.Hospital_20.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -18,9 +17,17 @@ public class Patient {
 	private Long id;
 
 	private String name;
+
+	@Column(unique = true)
 	private String cpf;
+
 	private String phone;
 
-	private Boolean is_hospitalized = Boolean.FALSE;
+	private Boolean isHospitalized = Boolean.FALSE;
 
+	public Patient(String name, String cpf, String phone) {
+		this.name = name;
+		this.cpf = cpf;
+		this.phone = phone;
+	}
 }

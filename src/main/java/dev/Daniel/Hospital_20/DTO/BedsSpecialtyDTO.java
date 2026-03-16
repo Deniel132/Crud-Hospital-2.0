@@ -10,13 +10,13 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class Beds_specialtyDTO {
+public class BedsSpecialtyDTO {
 
 
 	private Specialty specialty;
 	private List<Bed> bedList;
 
-	public Beds_specialtyDTO(Specialty specialty, List<Bed> bedList) {
+	public BedsSpecialtyDTO(Specialty specialty, List<Bed> bedList) {
 		this.specialty = specialty;
 		this.bedList = bedList;
 	}

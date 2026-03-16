@@ -13,14 +13,13 @@ public class HospitalController {
 
 	private final HospitalService hospitalService;
 
-
 	public HospitalController(HospitalService hospitalService) {
 		this.hospitalService = hospitalService;
 	}
 
 	@PostMapping
 	public Hospital save(@RequestBody HospitalDTO hospitalDTO) {
-		return this.hospitalService.save(hospitalDTO);
+		return this.hospitalService.create(hospitalDTO);
 	}
 
 	@GetMapping
@@ -29,14 +28,12 @@ public class HospitalController {
 	}
 
 	@GetMapping("/{id}")
-	public Hospital getByid(@PathVariable Long id) {
+	public Hospital getById(@PathVariable Long id) {
 		return this.hospitalService.getById(id);
 	}
 
-	@DeleteMapping("/deletar/{id}")
+	@DeleteMapping("/delete/{id}")
 	public void deleteById(@PathVariable Long id) {
 		this.hospitalService.deleteById(id);
 	}
-
-
 }
