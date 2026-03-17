@@ -22,9 +22,9 @@ public class RoomController {
 		return this.roomService.getAll();
 	}
 
-	@PostMapping("/{wardid}")
-	public List<Room> save(@PathVariable Long wardid, @RequestBody RoomDTO roomDTO) {
-		return this.roomService.create(wardid, roomDTO);
+	@PostMapping("/{idWard}")
+	public List<Room> save(@PathVariable Long idWard, @RequestBody RoomDTO roomDTO) {
+		return this.roomService.create(idWard, roomDTO);
 	}
 
 }

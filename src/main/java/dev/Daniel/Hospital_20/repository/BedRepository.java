@@ -41,7 +41,7 @@ public interface BedRepository extends JpaRepository<Bed, Long> {
 	public List<Bed> bedSpecialty(Status status, Long hospitalId, Specialty specialty);
 
 
-	@Query("select max(b.bedNumber) from Bed b where b.room.id = :roomId group by b.id")
+	@Query("select max(b.bedNumber) from Bed b where b.room.id = :roomId")
 	public Long getBedNumber(Long roomId);
 
 

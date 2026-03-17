@@ -12,8 +12,9 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
 	@Query("SELECT new dev.Daniel.Hospital_20.DTO.RoomsSpecialtyDTO(r.ward.specialty,r.roomCode)" +
 			"FROM Room r " +
-			"where r.isFilled = false")
-	public List<RoomsSpecialtyDTO> freeRooms();
+			"where r.isFilled = false " +
+			"AND r.ward.hospital.id = :hospitalId ")
+	public List<RoomsSpecialtyDTO> freeRooms(Long hospitalId);
 
 	@Query(value = """
 			select max(cast(substring(r.room_code from '[0-9]+') as integer))

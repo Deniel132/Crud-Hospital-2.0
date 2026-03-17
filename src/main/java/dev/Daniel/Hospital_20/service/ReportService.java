@@ -41,13 +41,13 @@ public class ReportService {
 	}
 
 
-	public List<BedsSpecialtyDTO> bedList(int status_int, Long hospital_id) {
+	public List<BedsSpecialtyDTO> bedList(int statusInt, Long hospitalId) {
 		List<BedsSpecialtyDTO> list = new ArrayList<>();
 
-		for (Specialty sp : wardRepository.specialtyList(hospital_id)) {
+		for (Specialty sp : wardRepository.specialtyList(hospitalId)) {
 			BedsSpecialtyDTO bedsSpecialtyDTO = new BedsSpecialtyDTO();
 
-			List<Bed> bedList = this.bedRepository.bedSpecialty(Status.deint(status_int), hospital_id, sp);
+			List<Bed> bedList = this.bedRepository.bedSpecialty(Status.deint(statusInt), hospitalId, sp);
 
 			bedsSpecialtyDTO.setSpecialty(sp);
 			bedsSpecialtyDTO.setBedList(bedList);
@@ -72,9 +72,9 @@ public class ReportService {
 		return this.bedService.getAll();
 	}
 
-	public QuantityBedsDTO getQuantity(Long hospital_id) {
-		QuantityBedsDTO quantityBedsDTO = this.bedRepository.quantity(hospital_id);
-		quantityBedsDTO.setBedSpecialtyQtDto(this.bedRepository.quantityPerWard(hospital_id));
+	public QuantityBedsDTO getQuantity(Long hospitalId) {
+		QuantityBedsDTO quantityBedsDTO = this.bedRepository.quantity(hospitalId);
+		quantityBedsDTO.setBedSpecialtyQtDto(this.bedRepository.quantityPerWard(hospitalId));
 		return quantityBedsDTO;
 	}
 
@@ -84,17 +84,17 @@ public class ReportService {
 
 
 	public Page<HistoryDTO> patientHistory(int pagina, int tamanho, Long id) {
-		Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("date").descending());
+		Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("timeStamp").descending());
 		return logRepository.history(id, pageable);
 	}
 
 
-	public List<RoomsSpecialtyDTO> avaiable() {
-		return this.roomRepository.freeRooms();
+	public List<RoomsSpecialtyDTO> avaiable(Long hospitalId) {
+		return this.roomRepository.freeRooms(hospitalId);
 	}
 
-	public List<AllPatientHospitalizedDTO> getAllHospitalized() {
-		return this.logRepository.All_hospitalized();
+	public List<AllPatientHospitalizedDTO> getAllHospitalized(Long hospitalId) {
+		return this.logRepository.All_hospitalized(hospitalId);
 	}
 
 

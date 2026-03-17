@@ -28,9 +28,9 @@ public class BedController {
 		return this.bedService.getAll();
 	}
 
-	@PostMapping
-	public List<Bed> create(@RequestBody BedDTO bedDTO) {
-		return this.bedService.create(bedDTO);
+	@PostMapping("/{roomid}")
+	public List<Bed> create(@PathVariable Long roomid, @RequestBody BedDTO bedDTO) {
+		return this.bedService.create(roomid, bedDTO);
 	}
 
 

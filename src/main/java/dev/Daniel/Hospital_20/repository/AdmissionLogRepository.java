@@ -33,8 +33,9 @@ public interface AdmissionLogRepository extends JpaRepository<AdmissionLog, Long
 			"AND lodDischarge.eventType = dev.Daniel.Hospital_20.model.enums.Event.DISCHARGE " +
 			"and lodDischarge.timeStamp > a.timeStamp)) " +
 			"from AdmissionLog a " +
-			"where  a.patient.id = :id " +
-			"AND a.eventType = dev.Daniel.Hospital_20.model.enums.Event.ADMISSION ")
+			"where a.patient.id = :id " +
+			"AND a.eventType = dev.Daniel.Hospital_20.model.enums.Event.ADMISSION " +
+			"order by a.timeStamp desc")
 	public Page<HistoryDTO> history(Long id, Pageable pageable);
 
 
@@ -44,6 +45,7 @@ public interface AdmissionLogRepository extends JpaRepository<AdmissionLog, Long
 			"JOIN a.patient p " +
 			"WHERE p.isHospitalized = true " +
 			"AND a.eventType = dev.Daniel.Hospital_20.model.enums.Event.ADMISSION " +
+			"and a.bed.room.ward.hospital.id = :hospitalId " +
 			"AND a.id = (" +
 			"    SELECT max(al.id) " +
 			"    FROM AdmissionLog al " +
@@ -51,7 +53,7 @@ public interface AdmissionLogRepository extends JpaRepository<AdmissionLog, Long
 			"      AND al.eventType = dev.Daniel.Hospital_20.model.enums.Event.ADMISSION" +
 			") " +
 			"ORDER BY a.timeStamp DESC")
-	public List<AllPatientHospitalizedDTO> All_hospitalized();
+	public List<AllPatientHospitalizedDTO> All_hospitalized(Long hospitalId);
 
 
 	@Query("select new dev.Daniel.Hospital_20.DTO.BedHistoryDTO(a.patient.name,a.bed.id,a.timeStamp," +

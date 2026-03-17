@@ -26,8 +26,8 @@ public class BedService {
 
 
 	@Transactional
-	public List<Bed> create(BedDTO bedDTO) {
-		Room room = roomRepository.findById(bedDTO.getRoomId()).orElseThrow(() -> new RuntimeException("Room Nao Encontrado"));
+	public List<Bed> create(Long roomId, BedDTO bedDTO) {
+		Room room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room Nao Encontrado"));
 		return this.generate(room, bedDTO.getQuantity());
 	}
 
@@ -37,16 +37,12 @@ public class BedService {
 
 		List<Bed> bedList = new ArrayList<>();
 
+		long nextNumber = (bedRepository.getBedNumber(room.getId()) == null) ? 1 : bedRepository.getBedNumber(room.getId()) + 1;
+
 		for (int i = 1; i <= bedQuantity; i++) {
 			Bed bed = new Bed();
 			bed.setRoom(room);
-
-			if (room.getBeds() != null && !room.getBeds().isEmpty()) {
-				bed.setBedNumber(this.bedRepository.getBedNumber(room.getId()) + 1);
-			} else {
-				bed.setBedNumber((long) i);
-			}
-
+			bed.setBedNumber(nextNumber++);
 			bedList.add(bed);
 		}
 		return bedRepository.saveAll(bedList);

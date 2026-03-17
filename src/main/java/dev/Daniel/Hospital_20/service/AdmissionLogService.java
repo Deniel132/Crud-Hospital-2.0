@@ -53,7 +53,7 @@ public class AdmissionLogService {
 		this.bedService.vacateBed(admissionLogAntigo.getBed().getId());
 
 		AdmissionLog admissionLogNovo = new AdmissionLog(admissionLogAntigo.getBed(), admissionLogAntigo.getPatient(),
-				admissionLogAntigo.getTimeStamp(), Event.DISCHARGE);
+				admissionLogDto.getTimeStamp(), Event.DISCHARGE);
 
 		return this.admissionLogRepository.save(admissionLogNovo);
 	}

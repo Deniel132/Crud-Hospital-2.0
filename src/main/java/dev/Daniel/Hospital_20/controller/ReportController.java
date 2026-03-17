@@ -39,14 +39,14 @@ public class ReportController {
 		return this.reportService.patientHistory(page, size, id);
 	}
 
-	@GetMapping("/available")
-	public List<RoomsSpecialtyDTO> available() {
-		return this.reportService.avaiable();
+	@GetMapping("/available/{hospitalid}")
+	public List<RoomsSpecialtyDTO> available(@PathVariable Long hospitalid) {
+		return this.reportService.avaiable(hospitalid);
 	}
 
-	@GetMapping("/hospitalized")
-	public List<AllPatientHospitalizedDTO> AllHospitalized() {
-		return this.reportService.getAllHospitalized();
+	@GetMapping("/allhospitalized/{hospitaid}")
+	public List<AllPatientHospitalizedDTO> AllHospitalized(@PathVariable Long hospitaid) {
+		return this.reportService.getAllHospitalized(hospitaid);
 	}
 
 	@GetMapping("/bed-history/{id}")

@@ -46,7 +46,7 @@ public class WardService {
 			this.wardRepository.save(ward);
 
 			if (w.getRoomQuantity() > 0) {
-				if (ward.getRooms() != null && !ward.getRooms().isEmpty()) {
+				if (ward.getRooms() != null) {
 					List<Room> rooms = this.roomService.generate(ward, w.getRoomQuantity(), w.getBedQuantity());
 
 					for (Room r : rooms) {
